@@ -30,21 +30,21 @@ public class Enemy : MonoBehaviour
         transform.Translate(Vector3.down * (_speed * Time.deltaTime));
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D col)
     {
        
-        if (other.gameObject.tag.Equals("Player"))
+        if (col.gameObject.tag.Equals("Player"))
         {
-            Player player = other.gameObject.GetComponent<Player>();
+            Player player = col.gameObject.GetComponent<Player>();
            
             Destroy(gameObject);
             player?.DamagePlayer();
 
         }
-        else if (other.gameObject.tag.Equals("Laser"))
+        else if (col.gameObject.tag.Equals("Laser"))
         {
             Destroy(gameObject);
-            Destroy(other.gameObject);
+            Destroy(col.gameObject);
         }
     }
 }
