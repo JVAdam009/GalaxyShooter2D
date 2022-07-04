@@ -1,11 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class PowerUp : MonoBehaviour
 {
     [SerializeField] private float speed = 3f;
+
+    //Powerup IDs : 0 = triple shot 1 = speed 2 = shields
+    [SerializeField] private int ID = 0;
+    
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -31,8 +39,30 @@ public class PowerUp : MonoBehaviour
     {
         if (col.tag.Equals("Player"))
         {
-            col.gameObject.GetComponent<Player>()?.ActivateTripleShot();
-            Destroy(gameObject);
+            Player player = col.gameObject.GetComponent<Player>();
+
+            switch (ID)
+            {
+                case 0:
+                {
+                    player?.ActivateTripleShot();
+                    Destroy(gameObject);
+                }
+                    break;
+                case 1:
+                {
+                    player?.ActivateSpeedBoost();
+                    Destroy(gameObject);
+                }
+                    break;
+                case 2:
+                {
+                    player?.ActivateShields();
+                    Destroy(gameObject);
+                }
+                    break;
+            }
+ 
         }
     }
 }
