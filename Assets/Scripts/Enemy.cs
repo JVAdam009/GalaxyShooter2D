@@ -8,10 +8,12 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4f;
+
+    private Player player;
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -35,14 +37,14 @@ public class Enemy : MonoBehaviour
        
         if (col.gameObject.tag.Equals("Player"))
         {
-            Player player = col.gameObject.GetComponent<Player>();
-           
             Destroy(gameObject);
             player?.DamagePlayer();
 
         }
         else if (col.gameObject.tag.Equals("Laser"))
         {
+            int points = Random.Range(7, 12);
+            player?.AddScore(points);
             Destroy(gameObject);
             Destroy(col.gameObject);
         }

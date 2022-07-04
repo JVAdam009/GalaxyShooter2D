@@ -19,8 +19,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float _fireRate = 0.5f;
     
     [SerializeField] private int Lives = 3;
+    
+    [SerializeField] private int Score = 0;
 
     private SpawnManager _spawnManager;
+    
+    private uimanager _uiManager;
+    
+    private GameManager _gameManager;
 
     [SerializeField] private bool _isTripleShotActive = false;
     
@@ -30,8 +36,15 @@ public class Player : MonoBehaviour
     void Start()
     {
         _spawnManager = GameObject.Find("SpawnManager")?.GetComponent<SpawnManager>();
+        _uiManager    = GameObject.Find("UI_Manager")?.GetComponent<uimanager>();
+        _gameManager    = GameObject.Find("GameManager")?.GetComponent<GameManager>();
     }
 
+    public void AddScore(int points)
+    {
+        Score += points;
+        _uiManager?.SetScore(Score);
+    }
     public void DamagePlayer()
     {
         if (_isShieldActive)
@@ -41,9 +54,12 @@ public class Player : MonoBehaviour
             return;
         }
         Lives -= 1;
+        _uiManager.SetLive(Lives);
         if (Lives <= 0)
         {
             _spawnManager?.OnPlayerDeath();
+            _uiManager?.ShowGameOverText();
+            _gameManager?.SetGameOver();
             Destroy(gameObject);
         }
     }
