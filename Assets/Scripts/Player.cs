@@ -11,6 +11,12 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject TripleLaserObjPrefab;
     
     [SerializeField] private GameObject ShieldVisualizer;
+
+    [SerializeField] private GameObject LeftEngineOBj;
+    
+    [SerializeField] private GameObject RightEngineOBj;
+    
+    [SerializeField] private GameObject ExplosionObj;
     
     [SerializeField] private float _laserVerticalOffset = 0.7f;
 
@@ -22,15 +28,19 @@ public class Player : MonoBehaviour
     
     [SerializeField] private int Score = 0;
 
+    [SerializeField] private bool _isTripleShotActive = false;
+    
+    [SerializeField] private bool _isShieldActive = false;
+
     private SpawnManager _spawnManager;
     
     private uimanager _uiManager;
     
     private GameManager _gameManager;
 
-    [SerializeField] private bool _isTripleShotActive = false;
-    
-    [SerializeField] private bool _isShieldActive = false;
+    private bool _leftEngineOn = false;
+
+    private bool _rightEngineOn = false;
     
     // Start is called before the first frame update
     void Start()
@@ -54,13 +64,45 @@ public class Player : MonoBehaviour
             return;
         }
         Lives -= 1;
+        ChooseEngine();
         _uiManager.SetLive(Lives);
         if (Lives <= 0)
         {
             _spawnManager?.OnPlayerDeath();
             _uiManager?.ShowGameOverText();
             _gameManager?.SetGameOver();
-            Destroy(gameObject);
+            GameObject explosion = Instantiate(ExplosionObj, transform.position, Quaternion.identity);
+            Destroy(explosion, 2.4f);
+            
+            Destroy(gameObject,.4f);
+        }
+    }
+
+    void ChooseEngine()
+    {
+        if (!_leftEngineOn && !_rightEngineOn)
+        {
+            int engineChoice = Random.Range(0, 2);
+            if (engineChoice > 0)
+            {
+                LeftEngineOBj.SetActive(true);
+                _leftEngineOn = true;
+            }
+            else
+            {
+                RightEngineOBj.SetActive(true);
+                _rightEngineOn = true;
+            }
+        }
+        else if (!_leftEngineOn && _rightEngineOn)
+        {
+            LeftEngineOBj.SetActive(true);
+            _leftEngineOn = true;
+        }
+        else if (_leftEngineOn && !_rightEngineOn)
+        {
+            RightEngineOBj.SetActive(true);
+            _rightEngineOn = true;
         }
     }
     
