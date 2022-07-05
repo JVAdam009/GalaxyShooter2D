@@ -25,10 +25,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float _fireCoolDown = -1f;
 
     [SerializeField] private float _fireRate = 0.5f;
+
+    [SerializeField] private float _thrusterSpeedIncrease = 2.5f;
     
-    [SerializeField] private int Lives = 3;
+    [SerializeField] private int _Lives = 3;
     
-    [SerializeField] private int Score = 0;
+    [SerializeField] private int _Score = 0;
 
     [SerializeField] private bool _isTripleShotActive = false;
     
@@ -58,8 +60,8 @@ public class Player : MonoBehaviour
 
     public void AddScore(int points)
     {
-        Score += points;
-        _uiManager?.SetScore(Score);
+        _Score += points;
+        _uiManager?.SetScore(_Score);
     }
     public void DamagePlayer()
     {
@@ -69,10 +71,10 @@ public class Player : MonoBehaviour
             ShieldVisualizer.SetActive(false);
             return;
         }
-        Lives -= 1;
+        _Lives -= 1;
         ChooseEngine();
-        _uiManager.SetLive(Lives);
-        if (Lives == 0)
+        _uiManager.SetLive(_Lives);
+        if (_Lives == 0)
         {
             _spawnManager?.OnPlayerDeath();
             _uiManager?.ShowGameOverText();
@@ -177,9 +179,17 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
       
         float verticalInput = Input.GetAxis("Vertical");
-       
-        transform.Translate(((Vector3.right * horizontalInput) + (Vector3.up * verticalInput)) * _speed * Time.deltaTime);
-        
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _speed += _thrusterSpeedIncrease;
+        }
+        else if(Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _speed -= _thrusterSpeedIncrease;
+        }
+        transform.Translate(((Vector3.right * horizontalInput) + (Vector3.up * verticalInput)) * (_speed * Time.deltaTime));
+
         
         if (transform.position.y > 0)
         {
