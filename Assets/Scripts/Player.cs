@@ -32,6 +32,10 @@ public class Player : MonoBehaviour
     
     [SerializeField] private bool _isShieldActive = false;
 
+    [SerializeField] private AudioClip _laserAudioClip;
+
+    [SerializeField] private AudioSource _sfxSource;
+
     private SpawnManager _spawnManager;
     
     private uimanager _uiManager;
@@ -159,6 +163,10 @@ public class Player : MonoBehaviour
                 Instantiate(LaserObjPrefab, transform.position+new Vector3(0,_laserVerticalOffset,0), Quaternion.identity);
             }
             _fireCoolDown = Time.time + _fireRate;
+
+            _sfxSource.clip = _laserAudioClip;
+            
+            _sfxSource.Play();
         }
     }
 

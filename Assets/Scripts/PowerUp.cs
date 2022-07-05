@@ -11,6 +11,8 @@ public class PowerUp : MonoBehaviour
 
     //Powerup IDs : 0 = triple shot 1 = speed 2 = shields
     [SerializeField] private int ID = 0;
+
+    [SerializeField] private AudioClip _powerUpSFX;
     
     
     
@@ -40,28 +42,29 @@ public class PowerUp : MonoBehaviour
         if (col.tag.Equals("Player"))
         {
             Player player = col.gameObject.GetComponent<Player>();
+            AudioSource.PlayClipAtPoint(_powerUpSFX,transform.position);
 
             switch (ID)
             {
                 case 0:
                 {
                     player?.ActivateTripleShot();
-                    Destroy(gameObject);
                 }
                     break;
                 case 1:
                 {
                     player?.ActivateSpeedBoost();
-                    Destroy(gameObject);
                 }
                     break;
                 case 2:
                 {
                     player?.ActivateShields();
-                    Destroy(gameObject);
                 }
                     break;
             }
+            
+            Destroy(gameObject);
+
  
         }
     }

@@ -9,6 +9,11 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4f;
 
+    [SerializeField] private AudioClip _laserAudioClip;
+
+    [SerializeField] private AudioClip _explosionAudioClip;
+
+    [SerializeField] private AudioSource _sfxSource;
     private Player player;
 
     private Animator _animator;
@@ -43,6 +48,8 @@ public class Enemy : MonoBehaviour
             
             player?.DamagePlayer();
             _animator?.SetTrigger("onEnemyDeath");
+            _sfxSource.clip = _explosionAudioClip;
+            _sfxSource?.Play();
             _speed = 0; 
 
         }
@@ -52,6 +59,8 @@ public class Enemy : MonoBehaviour
             player?.AddScore(points);
             _animator?.SetTrigger("onEnemyDeath");
             _speed = 0; 
+            _sfxSource.clip = _explosionAudioClip;
+            _sfxSource?.Play();
             Destroy(col.gameObject);
         }
     }
