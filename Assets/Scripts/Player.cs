@@ -74,27 +74,7 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive)
         {
-            _shieldHitsLeft -= 1;
-            SpriteRenderer shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
-            if (shieldRenderer == null)
-            {
-                throw new Exception("Shield Renderer Null");
-            }
-            switch(_shieldHitsLeft)
-            {
-                case 2:
-                    shieldRenderer.color = new Color(1f, .5f, .8f, 1f);
-                    break;
-                case 1:
-                    shieldRenderer.color = new Color(1f, .5f, .5f, .5f);
-                   break;
-                case 0:
-                    _isShieldActive = false;
-                    _shieldVisualizer.SetActive(false);
-                        break;
-            }
-
-            
+            DamageShield();
             return;
         }
         _lives -= 1;
@@ -102,14 +82,42 @@ public class Player : MonoBehaviour
         _uiManager.SetLive(_lives);
         if (_lives == 0)
         {
-            _spawnManager?.OnPlayerDeath();
-            _uiManager?.ShowGameOverText();
-            _gameManager?.SetGameOver();
-            GameObject explosion = Instantiate(ExplosionObj, transform.position, Quaternion.identity);
-            Destroy(explosion, 2.4f);
-            
-            Destroy(gameObject,.4f);
+            KillPlayer();
         }
+    }
+
+    void DamageShield()
+    {
+        _shieldHitsLeft -= 1;
+        SpriteRenderer shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+        if (shieldRenderer == null)
+        {
+            throw new Exception("Shield Renderer Null");
+        }
+        switch(_shieldHitsLeft)
+        {
+            case 2:
+                shieldRenderer.color = new Color(1f, .5f, .8f, 1f);
+                break;
+            case 1:
+                shieldRenderer.color = new Color(1f, .5f, .5f, .5f);
+                break;
+            case 0:
+                _isShieldActive = false;
+                _shieldVisualizer.SetActive(false);
+                break;
+        }
+    }
+
+    void KillPlayer()
+    {
+        _spawnManager?.OnPlayerDeath();
+        _uiManager?.ShowGameOverText();
+        _gameManager?.SetGameOver();
+        GameObject explosion = Instantiate(ExplosionObj, transform.position, Quaternion.identity);
+        Destroy(explosion, 2.4f);
+            
+        Destroy(gameObject,.4f);
     }
 
     void ChooseEngine()
