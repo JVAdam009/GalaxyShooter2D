@@ -816,7 +816,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.084432125, y: -0.43012822}
+  m_Offset: {x: 0.084432125, y: -0.037335873}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -827,7 +827,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.4668775, y: 3.3779418}
+  m_Size: {x: 2.4668775, y: 4.1635265}
   m_EdgeRadius: 0
 --- !u!114 &581261895
 MonoBehaviour:
@@ -842,17 +842,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 3.5
-  LaserObjPrefab: {fileID: 9181498291773757244, guid: 8cd84136804c5df41b4b548c8b48852d, type: 3}
-  TripleLaserObjPrefab: {fileID: 5109280433980623230, guid: 0a113af067cf8274191a2aab527d6e2d, type: 3}
-  ShieldVisualizer: {fileID: 38696905}
-  LeftEngineOBj: {fileID: 609319752}
-  RightEngineOBj: {fileID: 52250225}
+  _laserObjPrefab: {fileID: 9181498291773757244, guid: 8cd84136804c5df41b4b548c8b48852d, type: 3}
+  _tripleLaserObjPrefab: {fileID: 5109280433980623230, guid: 0a113af067cf8274191a2aab527d6e2d, type: 3}
+  _shieldVisualizer: {fileID: 38696905}
+  _leftEngineOBj: {fileID: 609319752}
+  _rightEngineOBj: {fileID: 52250225}
   ExplosionObj: {fileID: 913814553087369067, guid: cbe9d0acc77039645a263e7bfbdb13cd, type: 3}
   _laserVerticalOffset: 1.06
   _fireCoolDown: -1
   _fireRate: 0.15
-  Lives: 3
-  Score: 0
+  _thrusterSpeedIncrease: 2.5
+  _lives: 3
+  _shieldHitsLeft: 3
+  _score: 0
   _isTripleShotActive: 0
   _isShieldActive: 0
   _laserAudioClip: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}

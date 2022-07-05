@@ -1,22 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float _speed = 3.5f;
 
-    [SerializeField] private GameObject LaserObjPrefab;
+    [SerializeField] private GameObject _laserObjPrefab;
 
-    [SerializeField] private GameObject TripleLaserObjPrefab;
+    [SerializeField] private GameObject _tripleLaserObjPrefab;
     
-    [SerializeField] private GameObject ShieldVisualizer;
+    [SerializeField] private GameObject _shieldVisualizer;
 
-    [SerializeField] private GameObject LeftEngineOBj;
+    [SerializeField] private GameObject _leftEngineOBj;
     
-    [SerializeField] private GameObject RightEngineOBj;
+    [SerializeField] private GameObject _rightEngineOBj;
     
     [SerializeField] private GameObject ExplosionObj;
     
@@ -28,9 +31,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float _thrusterSpeedIncrease = 2.5f;
     
-    [SerializeField] private int _Lives = 3;
+    [SerializeField] private int _lives = 3;
     
-    [SerializeField] private int _Score = 0;
+    [SerializeField] private int _shieldHitsLeft = 3;
+    
+    [SerializeField] private int _score = 0;
 
     [SerializeField] private bool _isTripleShotActive = false;
     
@@ -50,6 +55,8 @@ public class Player : MonoBehaviour
 
     private bool _rightEngineOn = false;
     
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -60,21 +67,40 @@ public class Player : MonoBehaviour
 
     public void AddScore(int points)
     {
-        _Score += points;
-        _uiManager?.SetScore(_Score);
+        _score += points;
+        _uiManager?.SetScore(_score);
     }
     public void DamagePlayer()
     {
         if (_isShieldActive)
         {
-            _isShieldActive = false;
-            ShieldVisualizer.SetActive(false);
+            _shieldHitsLeft -= 1;
+            SpriteRenderer shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+            if (shieldRenderer == null)
+            {
+                throw new Exception("Shield Renderer Null");
+            }
+            switch(_shieldHitsLeft)
+            {
+                case 2:
+                    shieldRenderer.color = new Color(1f, .5f, .8f, 1f);
+                    break;
+                case 1:
+                    shieldRenderer.color = new Color(1f, .5f, .5f, .5f);
+                   break;
+                case 0:
+                    _isShieldActive = false;
+                    _shieldVisualizer.SetActive(false);
+                        break;
+            }
+
+            
             return;
         }
-        _Lives -= 1;
+        _lives -= 1;
         ChooseEngine();
-        _uiManager.SetLive(_Lives);
-        if (_Lives == 0)
+        _uiManager.SetLive(_lives);
+        if (_lives == 0)
         {
             _spawnManager?.OnPlayerDeath();
             _uiManager?.ShowGameOverText();
@@ -93,23 +119,23 @@ public class Player : MonoBehaviour
             int engineChoice = Random.Range(0, 2);
             if (engineChoice > 0)
             {
-                LeftEngineOBj.SetActive(true);
+                _leftEngineOBj.SetActive(true);
                 _leftEngineOn = true;
             }
             else
             {
-                RightEngineOBj.SetActive(true);
+                _rightEngineOBj.SetActive(true);
                 _rightEngineOn = true;
             }
         }
         else if (!_leftEngineOn && _rightEngineOn)
         {
-            LeftEngineOBj.SetActive(true);
+            _leftEngineOBj.SetActive(true);
             _leftEngineOn = true;
         }
         else if (_leftEngineOn && !_rightEngineOn)
         {
-            RightEngineOBj.SetActive(true);
+            _rightEngineOBj.SetActive(true);
             _rightEngineOn = true;
         }
     }
@@ -117,7 +143,7 @@ public class Player : MonoBehaviour
     public void ActivateShields()
     {
         _isShieldActive = true;
-        ShieldVisualizer.SetActive(true);
+        _shieldVisualizer.SetActive(true);
     }
 
     public void ActivateSpeedBoost()
@@ -160,11 +186,11 @@ public class Player : MonoBehaviour
         {
             if (_isTripleShotActive)
             {  
-                Instantiate(TripleLaserObjPrefab, transform.position, Quaternion.identity);
+                Instantiate(_tripleLaserObjPrefab, transform.position, Quaternion.identity);
             }
             else
             {
-                Instantiate(LaserObjPrefab, transform.position+new Vector3(0,_laserVerticalOffset,0), Quaternion.identity);
+                Instantiate(_laserObjPrefab, transform.position+new Vector3(0,_laserVerticalOffset,0), Quaternion.identity);
             }
             _fireCoolDown = Time.time + _fireRate;
 
