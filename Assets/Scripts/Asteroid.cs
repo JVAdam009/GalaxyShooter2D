@@ -9,6 +9,8 @@ public class Asteroid : MonoBehaviour
 
 
     [SerializeField] private GameObject _explosionObj;
+    
+    
 
     private SpawnManager _spawnManager;
 
@@ -32,6 +34,7 @@ public class Asteroid : MonoBehaviour
     {
         if (col.gameObject.tag.Equals("Laser"))
         {
+            GetComponent<CircleCollider2D>().enabled = false;
             GameObject explosion = Instantiate(_explosionObj,transform.position,Quaternion.identity);
             Destroy(explosion,3f);
             Destroy(col.gameObject);

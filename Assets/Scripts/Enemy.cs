@@ -14,7 +14,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private AudioClip _explosionAudioClip;
 
     [SerializeField] private AudioSource _sfxSource;
+
+    [SerializeField] private GameObject _LaserPrefab;
+    
     private Player player;
+
+    private Coroutine _laserCoroutine;
 
     private Animator _animator;
     // Start is called before the first frame update
@@ -22,6 +27,7 @@ public class Enemy : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         _animator = gameObject.GetComponent<Animator>();
+        _laserCoroutine = StartCoroutine(FireLaser());
     }
 
     // Update is called once per frame
@@ -40,6 +46,20 @@ public class Enemy : MonoBehaviour
         transform.Translate(Vector3.down * (_speed * Time.deltaTime));
     }
 
+    IEnumerator FireLaser()
+    {
+        while (true)
+        {
+            int fireTime = Random.Range(3, 7);
+            yield return new WaitForSeconds(fireTime);
+            GameObject laserGO = Instantiate(_LaserPrefab, transform.position + Vector3.down, Quaternion.identity);
+            Laser laser = laserGO.GetComponent<Laser>();
+            laser.Speed = -_speed * 1.5f;
+            laser.SetDamagePlayer();
+            AudioSource.PlayClipAtPoint(_laserAudioClip,transform.position);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D col)
     {
        
@@ -51,6 +71,8 @@ public class Enemy : MonoBehaviour
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
             _speed = 0; 
+            StopCoroutine(_laserCoroutine);
+            Destroy(GetComponent<Collider2D>());
 
         }
         else if (col.gameObject.tag.Equals("Laser"))
@@ -61,6 +83,8 @@ public class Enemy : MonoBehaviour
             _speed = 0; 
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
+            StopCoroutine(_laserCoroutine);
+            Destroy(GetComponent<Collider2D>());
             Destroy(col.gameObject);
         }
     }

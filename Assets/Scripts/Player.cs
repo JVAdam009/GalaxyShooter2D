@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -70,7 +72,7 @@ public class Player : MonoBehaviour
         Lives -= 1;
         ChooseEngine();
         _uiManager.SetLive(Lives);
-        if (Lives <= 0)
+        if (Lives == 0)
         {
             _spawnManager?.OnPlayerDeath();
             _uiManager?.ShowGameOverText();
@@ -196,6 +198,19 @@ public class Player : MonoBehaviour
         else if (transform.position.x <= -13.4f)
         {
             transform.position = new Vector3(13.4f,transform.position.y,  0);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.tag.Equals("Laser"))
+        {
+            Laser laser = col.gameObject.GetComponent<Laser>();
+            if (laser?.CanDamagePlayer() == true)
+            {
+                DamagePlayer();
+                Destroy(laser.gameObject);
+            }
         }
     }
 }
