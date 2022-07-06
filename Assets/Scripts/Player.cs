@@ -149,7 +149,12 @@ public class Player : MonoBehaviour
             _rightEngineOn = true;
         }
     }
-    
+
+    public void RefillAmmo()
+    {
+        _AmmoCountLeft = 15;
+        _uiManager.SetAmmoText(_AmmoCountLeft);
+    }
     public void ActivateShields()
     {
         _isShieldActive = true;
