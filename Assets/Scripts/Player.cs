@@ -150,10 +150,48 @@ public class Player : MonoBehaviour
         }
     }
 
+    void HealEngine()
+    {
+        if (_leftEngineOn && _rightEngineOn)
+        {
+            int engineChoice = Random.Range(0, 2);
+            if (engineChoice > 0)
+            {
+                _leftEngineOBj.SetActive(false);
+                _leftEngineOn = false;
+            }
+            else
+            {
+                _rightEngineOBj.SetActive(false);
+                _rightEngineOn = false;
+            }
+        }
+        else if (!_leftEngineOn && _rightEngineOn)
+        {
+            _rightEngineOBj.SetActive(false);
+            _rightEngineOn = false;
+        }
+        else if (_leftEngineOn && !_rightEngineOn)
+        {
+            _leftEngineOBj.SetActive(false);
+            _leftEngineOn = false;
+        }
+    }
+
     public void RefillAmmo()
     {
         _AmmoCountLeft = 15;
         _uiManager.SetAmmoText(_AmmoCountLeft);
+    }
+
+    public void Heal()
+    {
+        if (_lives < 3)
+        {
+            _lives += 1;
+            _uiManager.SetLive(_lives);
+            HealEngine();
+        }
     }
     public void ActivateShields()
     {

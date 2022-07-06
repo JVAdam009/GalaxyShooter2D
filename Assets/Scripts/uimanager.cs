@@ -36,6 +36,11 @@ public class uimanager : MonoBehaviour
             _ammoCountText.color = Color.red;
             _pulsateAmmoColor = true;
         }
+        else
+        {
+            _ammoCountText.color = Color.white;
+            _pulsateAmmoColor = false;
+        }
     }
 
     public void SetScore(int score)
