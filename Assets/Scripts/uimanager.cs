@@ -8,47 +8,60 @@ using UnityEngine.SceneManagement;
 public class uimanager : MonoBehaviour
 {
 
-    [SerializeField] private TMP_Text scoretext;
+    [SerializeField] private TMP_Text _scoretext;
 
-    [SerializeField] private Sprite[] liveSprites;
+    [SerializeField] private Sprite[] _liveSprites;
 
     [SerializeField] private Image _livesImg;
 
-    [SerializeField] private GameObject gameOverText;
+    [SerializeField] private GameObject _gameOverText;
 
-    [SerializeField] private GameObject restartText; 
+    [SerializeField] private GameObject _restartText; 
+
+    [SerializeField] private TMP_Text _ammoCountText;
+
+    private bool _pulsateAmmoColor = false;
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-     
+    public void SetAmmoText(int ammoCount)
+    {
+        _ammoCountText.text = "Ammo: " + ammoCount;
+
+        if (ammoCount < 1)
+        {
+            _ammoCountText.color = Color.red;
+            _pulsateAmmoColor = true;
+        }
+    }
 
     public void SetScore(int score)
     {
-        scoretext.text = "Score: " + score;
+        _scoretext.text = "Score: " + score;
     }
 
     public void SetLive(int currentlives)
     {
-        _livesImg.sprite = liveSprites[currentlives];
+        _livesImg.sprite = _liveSprites[currentlives];
     }
 
     public void ShowGameOverText()
     {
         StartCoroutine(FlickerGameOver());
-        restartText.SetActive(true);
+        _restartText.SetActive(true);
     }
 
     public void EnableGameOverText()
     {
-        gameOverText.SetActive(true);
+        _gameOverText.SetActive(true);
     }
     
     public void DisableGameOverText()
     {
-        gameOverText.SetActive(false);
+        _gameOverText.SetActive(false);
     }
 
     IEnumerator FlickerGameOver()
@@ -65,6 +78,23 @@ public class uimanager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (_pulsateAmmoColor == true)
+        {
+            OutofAmmoPulseColor();
+        }
+        else
+        {
+            NormalAmmoColor();
+        }
+    }
+
+    void OutofAmmoPulseColor()
+    {
+        _ammoCountText.color = new Color(1, 0, 0, Mathf.PingPong(Time.time, 1));
+    }
+
+    void NormalAmmoColor()
+    {
+        _ammoCountText.color = Color.white;
     }
 }

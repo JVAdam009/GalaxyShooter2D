@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int _shieldHitsLeft = 3;
     
     [SerializeField] private int _score = 0;
+    
+    [SerializeField] private int _AmmoCountLeft = 15;
 
     [SerializeField] private bool _isTripleShotActive = false;
     
@@ -190,8 +192,13 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _fireCoolDown)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _fireCoolDown && _AmmoCountLeft > 0)
         {
+            
+            _AmmoCountLeft -= 1;
+            
+            _uiManager.SetAmmoText(_AmmoCountLeft);
+            
             if (_isTripleShotActive)
             {  
                 Instantiate(_tripleLaserObjPrefab, transform.position, Quaternion.identity);
