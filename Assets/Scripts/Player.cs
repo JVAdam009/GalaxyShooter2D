@@ -14,8 +14,12 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _laserObjPrefab;
 
     [SerializeField] private GameObject _tripleLaserObjPrefab;
+
+    [SerializeField] private GameObject _wideLaserObjPrefab;
     
     [SerializeField] private GameObject _shieldVisualizer;
+    
+    [SerializeField] private GameObject _wideShotVisualizer;
 
     [SerializeField] private GameObject _leftEngineOBj;
     
@@ -40,6 +44,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int _AmmoCountLeft = 15;
 
     [SerializeField] private bool _isTripleShotActive = false;
+
+    [SerializeField] private bool _isWideShotActive = false;
     
     [SerializeField] private bool _isShieldActive = false;
 
@@ -218,6 +224,21 @@ public class Player : MonoBehaviour
         StartCoroutine(TripleShotCooldown());
     }
 
+    public void ActivateWideShot()
+    {
+        _isWideShotActive = true;
+        _wideShotVisualizer.SetActive(true);
+        RefillAmmo();
+        StartCoroutine(WideShotCooldown());
+    }
+
+    IEnumerator WideShotCooldown()
+    {
+        yield return new WaitForSeconds(5f);
+        _wideShotVisualizer.SetActive(false);
+        _isWideShotActive = false;
+    }
+    
     IEnumerator TripleShotCooldown()
     {
         yield return new WaitForSeconds(5f);
@@ -242,9 +263,13 @@ public class Player : MonoBehaviour
             
             _uiManager.SetAmmoText(_AmmoCountLeft);
             
-            if (_isTripleShotActive)
+            if (_isTripleShotActive && !_isWideShotActive)
             {  
                 Instantiate(_tripleLaserObjPrefab, transform.position, Quaternion.identity);
+            }
+            else if (_isWideShotActive)
+            {
+                Instantiate(_wideLaserObjPrefab, transform.position, Quaternion.identity);
             }
             else
             {

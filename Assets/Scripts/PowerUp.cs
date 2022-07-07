@@ -16,11 +16,6 @@ public class PowerUp : MonoBehaviour
     
     
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -69,6 +64,13 @@ public class PowerUp : MonoBehaviour
                 case 4:
                 {
                     player?.Heal();
+                }
+                    break;
+                
+                    break;
+                case 5:
+                {
+                    player?.ActivateWideShot();
                 }
                     break;
             }
