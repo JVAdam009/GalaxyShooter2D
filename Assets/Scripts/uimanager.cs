@@ -20,12 +20,10 @@ public class uimanager : MonoBehaviour
 
     [SerializeField] private TMP_Text _ammoCountText;
 
+    [SerializeField] private Slider _thrustSlider;
+
     private bool _pulsateAmmoColor = false;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+ 
 
     public void SetAmmoText(int ammoCount)
     {
@@ -91,6 +89,13 @@ public class uimanager : MonoBehaviour
         {
             NormalAmmoColor();
         }
+        
+        
+    }
+
+    public void SetThrustValue(float value)
+    {
+        _thrustSlider.value = value;
     }
 
     void OutofAmmoPulseColor()

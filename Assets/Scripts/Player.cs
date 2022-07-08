@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float _thrusterSpeedIncrease = 2.5f;
     
+    [SerializeField] private float _thrusterBoostAmountLeft = 100;
+    
     [SerializeField] private int _lives = 3;
     
     [SerializeField] private int _shieldHitsLeft = 3;
@@ -62,7 +64,10 @@ public class Player : MonoBehaviour
     private bool _leftEngineOn = false;
 
     private bool _rightEngineOn = false;
-    
+
+    private bool _depletethruster = false;
+
+    private float _originalSPeed;
     
     
     // Start is called before the first frame update
@@ -71,6 +76,7 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("SpawnManager")?.GetComponent<SpawnManager>();
         _uiManager    = GameObject.Find("UI_Manager")?.GetComponent<uimanager>();
         _gameManager    = GameObject.Find("GameManager")?.GetComponent<GameManager>();
+        _originalSPeed = _speed;
     }
 
     public void AddScore(int points)
@@ -250,10 +256,28 @@ public class Player : MonoBehaviour
     void Update()
     {
     CaluclateMovement();
-    
+    ThrusterAmount();
     FireLaser();
+    
     }
 
+    void ThrusterAmount()
+    {
+        if (_depletethruster)
+        {
+            if (_thrusterBoostAmountLeft > 0)
+            {
+                _thrusterBoostAmountLeft -= 50 * Time.deltaTime;
+            } 
+        }
+        else
+        {
+            if (_thrusterBoostAmountLeft < 100)
+            {
+                _thrusterBoostAmountLeft += 50 * Time.deltaTime;
+            }
+        }
+    }
     void FireLaser()
     {
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _fireCoolDown && _AmmoCountLeft > 0)
@@ -289,14 +313,22 @@ public class Player : MonoBehaviour
       
         float verticalInput = Input.GetAxis("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _thrusterBoostAmountLeft > 0)
         {
             _speed += _thrusterSpeedIncrease;
+            _depletethruster = true;
+           
         }
-        else if(Input.GetKeyUp(KeyCode.LeftShift))
+        else if(Input.GetKeyUp(KeyCode.LeftShift) || _thrusterBoostAmountLeft <= 0)
         {
-            _speed -= _thrusterSpeedIncrease;
+
+            _speed = _originalSPeed;
+            _depletethruster = false;
         }
+        
+        
+        
+        _uiManager.SetThrustValue(_thrusterBoostAmountLeft);
         transform.Translate(((Vector3.right * horizontalInput) + (Vector3.up * verticalInput)) * (_speed * Time.deltaTime));
 
         
