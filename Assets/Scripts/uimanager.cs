@@ -27,7 +27,7 @@ public class uimanager : MonoBehaviour
 
     public void SetAmmoText(int ammoCount)
     {
-        _ammoCountText.text = "Ammo: " + ammoCount;
+        _ammoCountText.text = "Ammo: " + ammoCount + " / 15" ;
 
         if (ammoCount < 1)
         {
