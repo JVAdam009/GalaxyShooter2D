@@ -22,10 +22,13 @@ public class Enemy : MonoBehaviour
     private Coroutine _laserCoroutine;
 
     private Animator _animator;
+
+    private GameManager _gameManager;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        _gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
         _animator = gameObject.GetComponent<Animator>();
         _laserCoroutine = StartCoroutine(FireLaser());
     }
@@ -71,6 +74,7 @@ public class Enemy : MonoBehaviour
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
             _speed = 0; 
+            _gameManager.StartCameraShake();
             StopCoroutine(_laserCoroutine);
             Destroy(GetComponent<Collider2D>());
 
@@ -83,6 +87,7 @@ public class Enemy : MonoBehaviour
             _speed = 0; 
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
+            _gameManager.StartCameraShake();
             StopCoroutine(_laserCoroutine);
             Destroy(GetComponent<Collider2D>());
             Destroy(col.gameObject);

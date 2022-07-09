@@ -94,10 +94,13 @@ public class Player : MonoBehaviour
         _lives -= 1;
         ChooseEngine();
         _uiManager.SetLive(_lives);
+        
+        _gameManager.StartCameraShake();
         if (_lives == 0)
         {
             KillPlayer();
         }
+        
     }
 
     void DamageShield()
@@ -121,6 +124,7 @@ public class Player : MonoBehaviour
                 _shieldVisualizer.SetActive(false);
                 break;
         }
+        _gameManager.StartCameraShake();
     }
 
     void KillPlayer()

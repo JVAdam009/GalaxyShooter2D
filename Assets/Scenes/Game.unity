@@ -1563,7 +1563,7 @@ GameObject:
   - component: {fileID: 901720902}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1581,6 +1581,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isGameOver: 0
+  _cameraShakeDuration: 0.22
+  _gameCamera: {fileID: 1219954614}
+  _cameraShakeStrength: 0.4
+  _cameraShakeOffset: 0.52
 --- !u!4 &901720903
 Transform:
   m_ObjectHideFlags: 0
@@ -2498,7 +2502,7 @@ MonoBehaviour:
   _gameOverText: {fileID: 1666720873}
   _restartText: {fileID: 1658998400}
   _ammoCountText: {fileID: 8269961}
-  _thrustSlider: {fileID: 0}
+  _thrustSlider: {fileID: 280791048}
 --- !u!4 &1669420910
 Transform:
   m_ObjectHideFlags: 0
