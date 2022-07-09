@@ -32,7 +32,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
         while (!_stopSpawning)
         {
-            Instantiate(enemyObj, new Vector3(Random.Range(-8, 8), 7.4f, 0f), Quaternion.identity,enemyContainer.transform);
+            Instantiate(enemyObj, new Vector3(Random.Range(-7, 7), 7.4f, 0f), Quaternion.identity,enemyContainer.transform);
             yield return new WaitForSeconds(spawnRate);
         }
     }

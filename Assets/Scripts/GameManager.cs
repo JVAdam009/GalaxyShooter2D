@@ -38,8 +38,7 @@ public class GameManager : MonoBehaviour
         shake.z = -10f;
         while (_cameraShakeDuration > timeElasped)
         {
-            Debug.Log(timeElasped);
-            Debug.Log(_cameraShakeDuration + "csd");
+            
             shake.x = Random.Range(-_cameraShakeOffset,_cameraShakeOffset) * _cameraShakeStrength;
             shake.y = Random.Range(-_cameraShakeOffset,_cameraShakeOffset) * _cameraShakeStrength;
             

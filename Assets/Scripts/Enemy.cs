@@ -24,6 +24,8 @@ public class Enemy : MonoBehaviour
     private Animator _animator;
 
     private GameManager _gameManager;
+
+    private bool _useNewMovement = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +33,11 @@ public class Enemy : MonoBehaviour
         _gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
         _animator = gameObject.GetComponent<Animator>();
         _laserCoroutine = StartCoroutine(FireLaser());
+
+        if (Random.Range(0, 100) > 50)
+        {
+            _useNewMovement = true;
+        }
     }
 
     // Update is called once per frame
@@ -43,10 +50,22 @@ public class Enemy : MonoBehaviour
     {
         if (transform.position.y <= -5.45)
         {
-            transform.position = new Vector3(Random.Range(-8, 8), 7.4f, 0f);
+            transform.position = new Vector3(Random.Range(-7, 7), 7.4f, 0f);
         }
-        
-        transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+
+        if (_useNewMovement)
+        {
+            float xsin = Mathf.Sin(Time.time );
+
+            transform.Translate(new Vector3(xsin, -1, 0) * (_speed * Time.deltaTime));
+            Vector3 clampedPosition = transform.position;
+            clampedPosition.x =Mathf.Clamp(clampedPosition.x, -9f, 9f);
+            transform.position = clampedPosition;
+        }
+        else
+        {
+            transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+        }
     }
 
     IEnumerator FireLaser()
