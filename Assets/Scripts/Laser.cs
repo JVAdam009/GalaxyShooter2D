@@ -13,12 +13,7 @@ public class Laser : MonoBehaviour
         get => _speed;
         set => _speed = value;
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    
 
     public void SetDamagePlayer()
     {

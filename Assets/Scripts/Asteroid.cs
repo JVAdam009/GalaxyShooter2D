@@ -15,11 +15,14 @@ public class Asteroid : MonoBehaviour
     private SpawnManager _spawnManager;
 
     private GameManager _gameManager;
+    
+    private uimanager _uiManager;
 
     private void Start()
     {
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         _gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
+        _uiManager = GameObject.FindWithTag("UIManager").GetComponent<uimanager>();
     }
 
     // Update is called once per frame
@@ -40,6 +43,7 @@ public class Asteroid : MonoBehaviour
             GetComponent<CircleCollider2D>().enabled = false;
             GameObject explosion = Instantiate(_explosionObj,transform.position,Quaternion.identity);
             _gameManager.StartCameraShake();
+            _uiManager.StartWaveText();
             Destroy(explosion,3f);
             Destroy(col.gameObject);
             _spawnManager.StartSpawning();

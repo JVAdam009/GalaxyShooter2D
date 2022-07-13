@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,8 +23,12 @@ public class uimanager : MonoBehaviour
 
     [SerializeField] private Slider _thrustSlider;
 
+    [SerializeField] private TMP_Text _waveText;
+
     private bool _pulsateAmmoColor = false;
- 
+    
+    private bool _showWaveText;
+
 
     public void SetAmmoText(int ammoCount)
     {
@@ -39,6 +44,24 @@ public class uimanager : MonoBehaviour
             _ammoCountText.color = Color.white;
             _pulsateAmmoColor = false;
         }
+    }
+
+    public void StartWaveText()
+    {
+        StartCoroutine(WaveTextFade());
+    }
+
+    IEnumerator WaveTextFade()
+    {
+        _showWaveText = true;
+        yield return null;
+        StartCoroutine(StopWaveText());
+    }
+
+    IEnumerator StopWaveText()
+    {
+        yield return new WaitForSeconds(3f);
+        _showWaveText = false;
     }
 
     public void SetScore(int score)
@@ -89,7 +112,16 @@ public class uimanager : MonoBehaviour
         {
             NormalAmmoColor();
         }
-        
+
+        if (_showWaveText)
+        {
+            _waveText.enabled = true;
+            _waveText.color = new Color(1, 1, 1, Mathf.PingPong(Time.time, 1));
+        }
+        else
+        {
+            _waveText.enabled = false;
+        }
         
     }
 

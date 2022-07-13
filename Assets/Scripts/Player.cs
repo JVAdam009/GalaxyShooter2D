@@ -358,14 +358,10 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag.Equals("Laser"))
+        if (col.tag.Equals("EnemyLaser"))
         {
-            Laser laser = col.gameObject.GetComponent<Laser>();
-            if (laser?.CanDamagePlayer() == true)
-            {
                 DamagePlayer();
-                Destroy(laser.gameObject);
-            }
+                Destroy(col.gameObject);
         }
     }
 }

@@ -26,14 +26,17 @@ public class Enemy : MonoBehaviour
     private GameManager _gameManager;
 
     private bool _useNewMovement = false;
+    
+    private SpawnManager _spawnManager;
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player = GameObject.FindWithTag("Player")?.GetComponent<Player>();
         _gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
         _animator = gameObject.GetComponent<Animator>();
         _laserCoroutine = StartCoroutine(FireLaser());
 
+        _spawnManager    = GameObject.Find("SpawnManager")?.GetComponent<SpawnManager>();
         if (Random.Range(0, 100) > 50)
         {
             _useNewMovement = true;
@@ -78,6 +81,7 @@ public class Enemy : MonoBehaviour
             Laser laser = laserGO.GetComponent<Laser>();
             laser.Speed = -_speed * 1.5f;
             laser.SetDamagePlayer();
+            laser.tag = "EnemyLaser";
             AudioSource.PlayClipAtPoint(_laserAudioClip,transform.position);
         }
     }
@@ -89,11 +93,13 @@ public class Enemy : MonoBehaviour
         {
             
             player?.DamagePlayer();
+            GetComponent<Collider2D>().enabled = false;
             _animator?.SetTrigger("onEnemyDeath");
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
             _speed = 0; 
             _gameManager.StartCameraShake();
+            _spawnManager.EnemyDied();
             StopCoroutine(_laserCoroutine);
             Destroy(GetComponent<Collider2D>());
 
@@ -102,11 +108,14 @@ public class Enemy : MonoBehaviour
         {
             int points = Random.Range(7, 12);
             player?.AddScore(points);
+            
+            GetComponent<Collider2D>().enabled = false;
             _animator?.SetTrigger("onEnemyDeath");
             _speed = 0; 
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
             _gameManager.StartCameraShake();
+            _spawnManager.EnemyDied();
             StopCoroutine(_laserCoroutine);
             Destroy(GetComponent<Collider2D>());
             Destroy(col.gameObject);
