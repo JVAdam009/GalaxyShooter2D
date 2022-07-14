@@ -44,6 +44,7 @@ public class PowerUp : MonoBehaviour
                 case 0:
                 {
                     player?.ActivateTripleShot();
+                    player?.RefillAmmo();
                 }
                     break;
                 case 1:
@@ -65,12 +66,15 @@ public class PowerUp : MonoBehaviour
                 {
                     player?.Heal();
                 }
-                    break;
-                
-                    break;
+                    break; 
                 case 5:
                 {
                     player?.ActivateWideShot();
+                }
+                    break; 
+                case 6:
+                {
+                    player?.ActivateNegativePowerUp();
                 }
                     break;
             }

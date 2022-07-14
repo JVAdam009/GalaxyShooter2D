@@ -67,9 +67,13 @@ public class Player : MonoBehaviour
 
     private bool _depletethruster = false;
 
+    private bool _NegativePowerActive = false;
+
     private float _originalSPeed;
     
     
+
+    private SpriteRenderer shieldRenderer;
     // Start is called before the first frame update
     void Start()
     {
@@ -77,6 +81,8 @@ public class Player : MonoBehaviour
         _uiManager    = GameObject.Find("UI_Manager")?.GetComponent<uimanager>();
         _gameManager    = GameObject.Find("GameManager")?.GetComponent<GameManager>();
         _originalSPeed = _speed;
+        shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+        
     }
 
     public void AddScore(int points)
@@ -106,12 +112,14 @@ public class Player : MonoBehaviour
     void DamageShield()
     {
         _shieldHitsLeft -= 1;
-        SpriteRenderer shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
-        if (shieldRenderer == null)
-        {
-            throw new Exception("Shield Renderer Null");
-        }
-        switch(_shieldHitsLeft)
+       UpdateShield();
+        _gameManager.StartCameraShake();
+    }
+
+    void UpdateShield()
+    {
+      
+        switch (_shieldHitsLeft)
         {
             case 2:
                 shieldRenderer.color = new Color(1f, .5f, .8f, 1f);
@@ -124,7 +132,6 @@ public class Player : MonoBehaviour
                 _shieldVisualizer.SetActive(false);
                 break;
         }
-        _gameManager.StartCameraShake();
     }
 
     void KillPlayer()
@@ -209,10 +216,27 @@ public class Player : MonoBehaviour
             HealEngine();
         }
     }
+
+    public void ActivateNegativePowerUp()
+    {
+        StartCoroutine(NegativePowerActive());
+        _NegativePowerActive = true;
+    }
+
+    IEnumerator NegativePowerActive()
+    {
+        _speed *= 0.25f;
+
+        yield return new WaitForSeconds(5f);
+        _speed = _originalSPeed;
+        _NegativePowerActive = false;
+    }
     public void ActivateShields()
     {
         _isShieldActive = true;
+        _shieldHitsLeft = 3;
         _shieldVisualizer.SetActive(true);
+        UpdateShield();
     }
 
     public void ActivateSpeedBoost()
@@ -267,6 +291,8 @@ public class Player : MonoBehaviour
 
     void ThrusterAmount()
     {
+
+        
         if (_depletethruster)
         {
             if (_thrusterBoostAmountLeft > 0)
@@ -317,13 +343,13 @@ public class Player : MonoBehaviour
       
         float verticalInput = Input.GetAxis("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _thrusterBoostAmountLeft > 0)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _thrusterBoostAmountLeft > 0 && !_NegativePowerActive)
         {
             _speed += _thrusterSpeedIncrease;
             _depletethruster = true;
            
         }
-        else if(Input.GetKeyUp(KeyCode.LeftShift) || _thrusterBoostAmountLeft <= 0)
+        else if( (Input.GetKeyUp(KeyCode.LeftShift) || _thrusterBoostAmountLeft <= 0 ) && !_NegativePowerActive)
         {
 
             _speed = _originalSPeed;
