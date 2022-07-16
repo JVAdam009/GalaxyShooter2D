@@ -16,6 +16,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private AudioSource _sfxSource;
 
     [SerializeField] private GameObject _LaserPrefab;
+
+    [SerializeField] private GameObject _explosionPrefab;
     
     private Player player;
 
@@ -26,6 +28,8 @@ public class Enemy : MonoBehaviour
     private GameManager _gameManager;
 
     private bool _useNewMovement = false;
+
+    [SerializeField]  private int _enemyID = 1;
     
     private SpawnManager _spawnManager;
     // Start is called before the first frame update
@@ -37,10 +41,15 @@ public class Enemy : MonoBehaviour
         _laserCoroutine = StartCoroutine(FireLaser());
 
         _spawnManager    = GameObject.Find("SpawnManager")?.GetComponent<SpawnManager>();
-        if (Random.Range(0, 100) > 50)
+        if (Random.Range(0, 100) > 50 && _enemyID == 1)
         {
             _useNewMovement = true;
         }
+    }
+
+    public void SetID(int id)
+    {
+        _enemyID = id;
     }
 
     // Update is called once per frame
@@ -56,6 +65,11 @@ public class Enemy : MonoBehaviour
             transform.position = new Vector3(Random.Range(-7, 7), 7.4f, 0f);
         }
 
+        if (transform.position.x > 11)
+        {
+            transform.position = new Vector3(-11, 5.36f, 0f);
+        }
+
         if (_useNewMovement)
         {
             float xsin = Mathf.Sin(Time.time );
@@ -65,23 +79,41 @@ public class Enemy : MonoBehaviour
             clampedPosition.x =Mathf.Clamp(clampedPosition.x, -9f, 9f);
             transform.position = clampedPosition;
         }
-        else
+        else 
         {
-            transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+            if (_enemyID == 1)
+            {
+                transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+            }
+            else if (_enemyID == 2)
+            {
+                transform.Translate(Vector2.right * (_speed * Time.deltaTime));
+            }
         }
+
     }
 
     IEnumerator FireLaser()
     {
         while (true)
         {
-            int fireTime = Random.Range(3, 7);
-            yield return new WaitForSeconds(fireTime);
-            GameObject laserGO = Instantiate(_LaserPrefab, transform.position + Vector3.down, Quaternion.identity);
-            Laser laser = laserGO.GetComponent<Laser>();
-            laser.Speed = -_speed * 1.5f;
-            laser.SetDamagePlayer();
-            laser.tag = "EnemyLaser";
+            if (_enemyID == 1)
+            {
+                
+                int fireTime = Random.Range(3, 7);
+                yield return new WaitForSeconds(fireTime);
+                GameObject laserGO = Instantiate(_LaserPrefab, transform.position + Vector3.down, Quaternion.identity);
+                Laser laser = laserGO.GetComponent<Laser>();
+                laser.Speed = -_speed * 1.5f;
+                laser.SetDamagePlayer();
+                laser.tag = "EnemyLaser";
+            }
+            else if (_enemyID == 2)
+            {
+                int fireTime = Random.Range(3, 7);
+                yield return new WaitForSeconds(fireTime);
+                Instantiate(_LaserPrefab, transform.position + Vector3.down, Quaternion.identity);
+            }
             AudioSource.PlayClipAtPoint(_laserAudioClip,transform.position);
         }
     }
@@ -111,6 +143,12 @@ public class Enemy : MonoBehaviour
             
             GetComponent<Collider2D>().enabled = false;
             _animator?.SetTrigger("onEnemyDeath");
+
+            if (_enemyID == 2)
+            {
+                GameObject explosion = Instantiate(_explosionPrefab,transform.position + Vector3.back*2f,Quaternion.identity);
+                Destroy(explosion,3f);
+            }
             _speed = 0; 
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
@@ -118,6 +156,7 @@ public class Enemy : MonoBehaviour
             _spawnManager.EnemyDied();
             StopCoroutine(_laserCoroutine);
             Destroy(GetComponent<Collider2D>());
+            Destroy(gameObject,1f);
             Destroy(col.gameObject);
         }
     }

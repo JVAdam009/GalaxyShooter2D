@@ -578,7 +578,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb1562295fc4d664793c044006f3822f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyObj: {fileID: 6303108086344857588, guid: 8d3be1319b42fdb41a28381a07019518, type: 3}
+  enemyObj:
+  - {fileID: 6303108086344857588, guid: 8d3be1319b42fdb41a28381a07019518, type: 3}
+  - {fileID: 6303108086344857588, guid: 8d3be1319b42fdb41a28381a07019518, type: 3}
+  - {fileID: 6303108086344857588, guid: 8d3be1319b42fdb41a28381a07019518, type: 3}
+  - {fileID: 6080094835265873333, guid: 709898d5b0c267f4895ee0d661c1da46, type: 3}
   PowerupObjs:
   - {fileID: 2953400878454736480, guid: 73f894351f82fd34b9ded616335e594a, type: 3}
   - {fileID: 2953400878454736480, guid: 73f894351f82fd34b9ded616335e594a, type: 3}

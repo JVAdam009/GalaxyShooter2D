@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyObj;
+    [SerializeField] private GameObject[] enemyObj;
     
     [SerializeField] private GameObject[]  PowerupObjs; 
     
@@ -91,7 +91,8 @@ public class SpawnManager : MonoBehaviour
         _spawnRoutineRunning = true;
         while (!_stopSpawning && (_numEnemiesSpawned) < (_numEnemiesToStartWith+(_waveNumber*_additionalEnemiesToAdd)))
         {
-            Instantiate(enemyObj, new Vector3(Random.Range(-7, 7), 7.4f, 0f), Quaternion.identity,enemyContainer.transform);
+            int randomEnemy = Random.Range(0, 4);
+            Instantiate(enemyObj[randomEnemy], new Vector3(Random.Range(-7, 7), 7.4f, 0f), Quaternion.identity,enemyContainer.transform);
             _numEnemiesSpawned++;
             yield return new WaitForSeconds(spawnRate);
         }
