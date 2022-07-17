@@ -121,6 +121,9 @@ public class Player : MonoBehaviour
       
         switch (_shieldHitsLeft)
         {
+            case 3:
+                shieldRenderer.color = new Color(1f, 1f, 1f, 1f);
+                break;
             case 2:
                 shieldRenderer.color = new Color(1f, .5f, .8f, 1f);
                 break;

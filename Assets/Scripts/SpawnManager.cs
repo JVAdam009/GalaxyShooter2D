@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -91,7 +92,7 @@ public class SpawnManager : MonoBehaviour
         _spawnRoutineRunning = true;
         while (!_stopSpawning && (_numEnemiesSpawned) < (_numEnemiesToStartWith+(_waveNumber*_additionalEnemiesToAdd)))
         {
-            int randomEnemy = Random.Range(0, 4);
+            int randomEnemy = GenerateEnemy(Random.Range(0, 60));
             Instantiate(enemyObj[randomEnemy], new Vector3(Random.Range(-7, 7), 7.4f, 0f), Quaternion.identity,enemyContainer.transform);
             _numEnemiesSpawned++;
             yield return new WaitForSeconds(spawnRate);
@@ -107,9 +108,61 @@ public class SpawnManager : MonoBehaviour
         while (!_stopSpawning)
         {
             yield return new WaitForSeconds(Random.Range(3f,7f));
-            int randomPowerUp = Random.Range(0, 13);
+            int randomPowerUp = GeneratePowerUp(Random.Range(0, 100));
             Instantiate(PowerupObjs[randomPowerUp], new Vector3(Random.Range(-8, 8), 7.4f, 0f), Quaternion.identity);
           
+        }
+    }
+
+    private int GeneratePowerUp(int range)
+    {
+       if(range is >= 0 and < 10)
+       {
+           return 4;
+       }
+       else if (range is >= 10 and < 15)
+       {
+           return 5;
+       }
+       else if (range is >= 20 and < 30)
+       {
+           return 3;
+       }
+       else if (range is >= 30 and < 40)
+       {
+           return 2;
+       }
+       else if (range is >= 40 and < 50)
+       {
+           return 1;
+       }
+       else if (range is >= 50 and < 55)
+       {
+           return 0;
+       }
+       else if (range is >= 60 and < 70)
+       {
+           return 6;
+       }
+       else
+       {
+           return 1;
+       }
+    }
+    
+    private int GenerateEnemy(int range)
+    {
+        if(range is >= 0 and  < 40)
+        {
+            return 0;
+        }
+        else if(range is >= 40 and < 50)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
         }
     }
 
