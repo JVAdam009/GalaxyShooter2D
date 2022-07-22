@@ -36,8 +36,8 @@ public class Enemy : MonoBehaviour
     private bool _hasShield = false;
     
     private SpawnManager _spawnManager;
-    
-    private
+
+    private bool _isAggressive;
     // Start is called before the first frame update
     void Start()
     {
