@@ -30,8 +30,14 @@ public class Enemy : MonoBehaviour
     private bool _useNewMovement = false;
 
     [SerializeField]  private int _enemyID = 1;
+
+    [SerializeField] private GameObject _shieldPrefab;
+
+    private bool _hasShield = false;
     
     private SpawnManager _spawnManager;
+    
+    private
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +50,16 @@ public class Enemy : MonoBehaviour
         if (Random.Range(0, 100) > 50 && _enemyID == 1)
         {
             _useNewMovement = true;
+        }
+        
+        if (Random.Range(0, 100) > 50)
+        {
+            _hasShield = true;
+
+            GameObject shield = Instantiate(_shieldPrefab, transform.position, Quaternion.identity, gameObject.transform);
+            shield.GetComponent<SpriteRenderer>().color = Color.red;
+            shield.transform.localScale = Vector3.one;
+
         }
     }
 
@@ -142,23 +158,45 @@ public class Enemy : MonoBehaviour
             player?.AddScore(points);
             
             GetComponent<Collider2D>().enabled = false;
-            _animator?.SetTrigger("onEnemyDeath");
+           
 
             if (_enemyID == 2)
             {
                 GameObject explosion = Instantiate(_explosionPrefab,transform.position + Vector3.back*2f,Quaternion.identity);
                 Destroy(explosion,3f);
             }
-            _speed = 0; 
-            _sfxSource.clip = _explosionAudioClip;
-            _sfxSource?.Play();
-            _gameManager.StartCameraShake();
-            _spawnManager.EnemyDied();
-            StopCoroutine(_laserCoroutine);
-            Destroy(GetComponent<Collider2D>());
-            Destroy(gameObject,1f);
-            Destroy(col.gameObject);
+
+            if (!_hasShield)
+            {
+                _animator?.SetTrigger("onEnemyDeath");
+                _speed = 0; 
+                _sfxSource.clip = _explosionAudioClip;
+                _sfxSource?.Play();
+                _gameManager.StartCameraShake();
+                _spawnManager.EnemyDied();
+                StopCoroutine(_laserCoroutine);
+                Destroy(GetComponent<Collider2D>());
+                Destroy(gameObject,1f);
+                Destroy(col.gameObject);
+            }
+            else
+            {
+                _hasShield = false;
+                foreach (Transform child in transform)
+                {
+                    Destroy(child.gameObject);
+                }
+                
+                StartCoroutine(ReEnableCollider(GetComponent<Collider2D>()));
+                Destroy(col.gameObject);
+            }
         }
+    }
+
+    IEnumerator ReEnableCollider(Collider2D col)
+    {
+        yield return new WaitForSeconds(1.1f);
+        col.enabled = true;
     }
 
  

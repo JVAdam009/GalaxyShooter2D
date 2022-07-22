@@ -103,6 +103,7 @@ MonoBehaviour:
   _LaserPrefab: {fileID: 4270308259987508841, guid: 5f5a209af6fb8324da40727e4e86966a, type: 3}
   _explosionPrefab: {fileID: 913814553087369067, guid: cbe9d0acc77039645a263e7bfbdb13cd, type: 3}
   _enemyID: 2
+  _shieldPrefab: {fileID: 4433918973866488004, guid: d20d3a60948609645b6fafc395bc5747, type: 3}
 --- !u!82 &592573816133732617
 AudioSource:
   m_ObjectHideFlags: 0
