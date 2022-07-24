@@ -160,6 +160,10 @@ public class SpawnManager : MonoBehaviour
         {
             return 1;
         }
+        else if(range is >= 50 and < 55)
+        {
+            return 2;
+        }
         else
         {
             return 0;
