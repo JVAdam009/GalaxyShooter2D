@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: -7088149065200872866}
   - component: {fileID: 697242743246491904}
   - component: {fileID: -8121632856254861729}
-  - component: {fileID: 6384697854829917545}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -58,6 +57,7 @@ MonoBehaviour:
   _explosionPrefab: {fileID: 0}
   _enemyID: 1
   _shieldPrefab: {fileID: 4433918973866488004, guid: d20d3a60948609645b6fafc395bc5747, type: 3}
+  _reverseFiringRange: 10
 --- !u!61 &884610145913858720
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -273,19 +273,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!58 &6384697854829917545
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6303108086344857588}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 2.56

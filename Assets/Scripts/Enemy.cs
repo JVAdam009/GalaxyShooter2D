@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -36,6 +37,10 @@ public class Enemy : MonoBehaviour
     private bool _hasShield = false;
     
     private SpawnManager _spawnManager;
+
+    [SerializeField] private float _reverseFiringRange = 5f;
+
+    private bool _hasFiredInReverse = false;
  
     // Start is called before the first frame update
     void Start()
@@ -60,6 +65,8 @@ public class Enemy : MonoBehaviour
             shield.transform.localScale = Vector3.one;
 
         }
+        
+         
     }
 
     public void SetID(int id)
@@ -71,6 +78,40 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Movement();
+    }
+
+ 
+
+    void FixedUpdate()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0,2f), new Vector2(0, _reverseFiringRange));
+
+        if (hit.collider != null && !_hasFiredInReverse)
+        {
+            var fire = Random.Range(0, 100);
+            if(hit.collider.tag.Equals("Player") && fire >= 25)
+            {
+                FireLaserInReverse();
+
+            }
+        }
+    }
+
+    void FireLaserInReverse()
+    {
+        GameObject laserGO = Instantiate(_LaserPrefab, transform.position + (Vector3.up * 1.75f), Quaternion.identity);
+        Laser laser = laserGO.GetComponent<Laser>();
+        laser.Speed = _speed * 1.5f;
+        laser.SetDamagePlayer();
+        laser.tag = "EnemyLaser";
+        _hasFiredInReverse = true;
+        StartCoroutine(ResetReverseFireRate());
+    }
+
+    IEnumerator ResetReverseFireRate()
+    {
+        yield return new WaitForSeconds(1.2f);
+        _hasFiredInReverse = false;
     }
 
     void Movement()
@@ -144,6 +185,11 @@ public class Enemy : MonoBehaviour
             _animator?.SetTrigger("onEnemyDeath");
             _sfxSource.clip = _explosionAudioClip;
             _sfxSource?.Play();
+            _hasShield = false;
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
             _speed = 0; 
             _gameManager.StartCameraShake();
             _spawnManager.EnemyDied();
@@ -196,6 +242,12 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(1.1f);
         col.enabled = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawRay(transform.position,new Vector3(0,_reverseFiringRange));
     }
 
  
