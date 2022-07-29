@@ -41,6 +41,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _reverseFiringRange = 5f;
 
     private bool _hasFiredInReverse = false;
+
+    private bool _hasFiredAtPowerUp = false;
  
     // Start is called before the first frame update
     void Start()
@@ -66,7 +68,9 @@ public class Enemy : MonoBehaviour
 
         }
         
-         
+        InvokeRepeating(nameof(ScanForPlayerReverse),0.1f, 0.1f);
+        
+        InvokeRepeating(nameof(ScanForPowerUp),0.1f, 0.1f);
     }
 
     public void SetID(int id)
@@ -82,17 +86,32 @@ public class Enemy : MonoBehaviour
 
  
 
-    void FixedUpdate()
+    void ScanForPlayerReverse()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0,2f), new Vector2(0, _reverseFiringRange));
 
-        if (hit.collider != null && !_hasFiredInReverse)
+        if (hit.collider != null && !_hasFiredAtPowerUp)
         {
             var fire = Random.Range(0, 100);
             if(hit.collider.tag.Equals("Player") && fire >= 25)
             {
-                FireLaserInReverse();
+                FireLaser();
+                _hasFiredAtPowerUp = true;
+            }
+        }
+    }
 
+    void ScanForPowerUp()
+    {
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position + (Vector3.down * 2), 1.25f, Vector2.down);
+
+        if (hit.collider != null && !_hasFiredInReverse)
+        {
+            if(hit.collider.tag.Equals("PowerUp") )
+            {
+                FireAtPowerup();
+
+                StartCoroutine(ResetPowerupFireRate());
             }
         }
     }
@@ -101,17 +120,32 @@ public class Enemy : MonoBehaviour
     {
         GameObject laserGO = Instantiate(_LaserPrefab, transform.position + (Vector3.up * 1.75f), Quaternion.identity);
         Laser laser = laserGO.GetComponent<Laser>();
-        laser.Speed = _speed * 1.5f;
+        laser.Speed = _speed * 2.5f;
         laser.SetDamagePlayer();
         laser.tag = "EnemyLaser";
         _hasFiredInReverse = true;
         StartCoroutine(ResetReverseFireRate());
     }
 
+    void FireAtPowerup()
+    {
+        GameObject laserGO = Instantiate(_LaserPrefab, transform.position + Vector3.down, Quaternion.identity);
+        Laser laser = laserGO.GetComponent<Laser>();
+        laser.Speed = -_speed * 1.5f;
+        laser.SetDamagePlayer();
+        laser.tag = "EnemyLaser";
+    }
+
     IEnumerator ResetReverseFireRate()
     {
         yield return new WaitForSeconds(1.2f);
         _hasFiredInReverse = false;
+    }
+    
+    IEnumerator ResetPowerupFireRate()
+    {
+        yield return new WaitForSeconds(1.2f);
+        _hasFiredAtPowerUp = false;
     }
 
     void Movement()
@@ -248,6 +282,9 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position,new Vector3(0,_reverseFiringRange));
+        
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position + (Vector3.down * 3),2.5f);
     }
 
  

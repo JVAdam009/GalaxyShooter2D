@@ -83,5 +83,10 @@ public class PowerUp : MonoBehaviour
 
  
         }
+        else if (col.tag.Equals("EnemyLaser"))
+        {
+            Destroy(col.gameObject);
+            Destroy(gameObject);
+        }
     }
 }
