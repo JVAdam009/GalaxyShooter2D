@@ -26,6 +26,8 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private int _additionalEnemiesToAdd = 2;
 
+    [SerializeField] private GameObject _PowerupContainer;
+
     private bool _startNextWave;
 
     private bool _stopSpawning = false;
@@ -109,7 +111,7 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(3f,7f));
             int randomPowerUp = GeneratePowerUp(Random.Range(0, 100));
-            Instantiate(PowerupObjs[randomPowerUp], new Vector3(Random.Range(-8, 8), 7.4f, 0f), Quaternion.identity);
+            Instantiate(PowerupObjs[randomPowerUp], new Vector3(Random.Range(-8, 8), 7.4f, 0f), Quaternion.identity,_PowerupContainer.transform);
           
         }
     }

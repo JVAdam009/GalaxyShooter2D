@@ -70,6 +70,10 @@ public class Player : MonoBehaviour
     private bool _NegativePowerActive = false;
 
     private float _originalSPeed;
+
+    [SerializeField] private float _drawInPowerUpSpeed = 6f;
+
+    [SerializeField] private GameObject _PowerupContainer;
     
     
 
@@ -289,7 +293,20 @@ public class Player : MonoBehaviour
     CaluclateMovement();
     ThrusterAmount();
     FireLaser();
-    
+    DrawInPowerups();
+    }
+
+    void DrawInPowerups()
+    {
+        if (Input.GetKey(KeyCode.C))
+        {
+            foreach (Transform powerUp in _PowerupContainer.transform)
+            {
+                powerUp.position = Vector3.MoveTowards(powerUp.position, transform.position,
+                    _drawInPowerUpSpeed * Time.deltaTime);
+            }
+            
+        }
     }
 
     void ThrusterAmount()
