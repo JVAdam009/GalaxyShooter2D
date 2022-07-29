@@ -43,6 +43,8 @@ public class Enemy : MonoBehaviour
     private bool _hasFiredInReverse = false;
 
     private bool _hasFiredAtPowerUp = false;
+
+    private bool _avoidLaserFire = false;
  
     // Start is called before the first frame update
     void Start()
@@ -67,10 +69,18 @@ public class Enemy : MonoBehaviour
             shield.transform.localScale = Vector3.one;
 
         }
+
+        if (_enemyID == 1)
+        {
+            InvokeRepeating(nameof(ScanForPowerUp),0.1f, 0.1f);
         
-        InvokeRepeating(nameof(ScanForPlayerReverse),0.1f, 0.1f);
+            InvokeRepeating(nameof(ScanForLaser),0.1f, 0.1f);
+            
+            InvokeRepeating(nameof(ScanForPlayerReverse),0.1f, 0.1f);
+
+        }
         
-        InvokeRepeating(nameof(ScanForPowerUp),0.1f, 0.1f);
+        
     }
 
     public void SetID(int id)
@@ -95,7 +105,7 @@ public class Enemy : MonoBehaviour
             var fire = Random.Range(0, 100);
             if(hit.collider.tag.Equals("Player") && fire >= 25)
             {
-                FireLaser();
+                FireLaserInReverse();
                 _hasFiredAtPowerUp = true;
             }
         }
@@ -114,6 +124,38 @@ public class Enemy : MonoBehaviour
                 StartCoroutine(ResetPowerupFireRate());
             }
         }
+    }
+    
+    void ScanForLaser()
+    {
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position + (Vector3.down * 2), 1.25f, Vector2.down);
+
+        if (hit.collider != null)
+        {
+            float avoidLaser = Random.Range(0, 100);
+            if(hit.collider.tag.Equals("Laser")  && avoidLaser > 55)
+            {
+                _avoidLaserFire = true;
+                StartCoroutine(AvoidLasers());
+            }
+        }
+    }
+
+    IEnumerator AvoidLasers()
+    {
+        float origX = transform.position.x;
+        while (_avoidLaserFire)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(origX+4,transform.position.y),(_speed*2 )* Time.deltaTime);
+
+            if (transform.position.x >= origX + 4)
+            {
+                _avoidLaserFire = false;
+            }
+            yield return null;
+        }
+
+        yield return null;
     }
 
     void FireLaserInReverse()
