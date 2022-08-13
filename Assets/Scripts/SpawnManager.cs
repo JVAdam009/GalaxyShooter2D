@@ -10,6 +10,8 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] enemyObj;
     
+    [SerializeField] private GameObject _BossObj;
+    
     [SerializeField] private GameObject[]  PowerupObjs; 
     
     [SerializeField] private int spawnRate  = 5;
@@ -24,9 +26,15 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private int _numEnemiesToStartWith = 5;
 
-    [SerializeField] private int _additionalEnemiesToAdd = 2;
+    [SerializeField] private int _additionalEnemiesToAdd = 1;
 
     [SerializeField] private GameObject _PowerupContainer;
+    
+    [SerializeField] private Transform _BossSpawn;
+    
+    
+    
+    [SerializeField] private Transform _BossTargetSpot;
 
     private bool _startNextWave;
 
@@ -43,6 +51,16 @@ public class SpawnManager : MonoBehaviour
     public void StartSpawning()
     {
         StartCoroutine(SpawnEnemiesRoutine());
+        StartCoroutine(SpawnPowerUpsRoutine());
+    }
+
+    public Transform GetBossTargetPoint()
+    {
+        return _BossTargetSpot;
+    }
+    public void BossSpawning()
+    {
+        Instantiate(_BossObj, _BossSpawn.position, Quaternion.identity,enemyContainer.transform);
         StartCoroutine(SpawnPowerUpsRoutine());
     }
     private void Start()
@@ -68,10 +86,26 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = false;
 
         yield return  null;
- 
-        StartSpawning();
+
+        if (_waveNumber % 10 == 0)
+        {
+            BossSpawning();
+        }
+        else
+        {
+            StartSpawning();
+        }
 
          
+    }
+
+    public void BossDied()
+    {
+        _startNextWave = true;
+        _waveNumber++;
+        _stopSpawning = true;
+        StopAllCoroutines();
+        _uiManager.StartWaveText();
     }
     
     public void EnemyDied()
@@ -145,6 +179,10 @@ public class SpawnManager : MonoBehaviour
        else if (range is >= 60 and < 70)
        {
            return 6;
+       }
+       else if (range is >= 70 and < 75)
+       {
+           return 7;
        }
        else
        {

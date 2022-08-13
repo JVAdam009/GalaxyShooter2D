@@ -25,6 +25,8 @@ public class uimanager : MonoBehaviour
 
     [SerializeField] private TMP_Text _waveText;
 
+    [SerializeField] private Slider _bossBar;
+
     private bool _pulsateAmmoColor = false;
     
     private bool _showWaveText;
@@ -51,6 +53,23 @@ public class uimanager : MonoBehaviour
         StartCoroutine(WaveTextFade());
     }
 
+    public void ShowBar()
+    {
+        _bossBar.value = 30;
+        _bossBar.maxValue = 30;
+        _bossBar.gameObject.SetActive(true);
+    }
+
+    public void SubtractFromBar()
+    {
+        _bossBar.value--;
+    }
+
+    public void HideBar()
+    {
+        _bossBar.gameObject.SetActive(false);
+    }
+
     IEnumerator WaveTextFade()
     {
         _showWaveText = true;
@@ -71,7 +90,8 @@ public class uimanager : MonoBehaviour
 
     public void SetLive(int currentlives)
     {
-        _livesImg.sprite = _liveSprites[currentlives];
+        if(currentlives >=0)
+            _livesImg.sprite = _liveSprites[currentlives];
     }
 
     public void ShowGameOverText()

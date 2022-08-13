@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float _speed = 3.5f;
 
+    [SerializeField] private GameObject _homingProjectilePrefab;
+
     [SerializeField] private GameObject _laserObjPrefab;
 
     [SerializeField] private GameObject _tripleLaserObjPrefab;
@@ -74,6 +76,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _drawInPowerUpSpeed = 6f;
 
     [SerializeField] private GameObject _PowerupContainer;
+
+    private bool _fireMissiles = false;
     
     
 
@@ -229,7 +233,19 @@ public class Player : MonoBehaviour
         StartCoroutine(NegativePowerActive());
         _NegativePowerActive = true;
     }
-
+    
+    public void ActivateMissilePowerUp()
+    {
+        StartCoroutine(MissilePowerActive());
+        _fireMissiles = true;
+    }
+    IEnumerator MissilePowerActive()
+    {
+         
+        yield return new WaitForSeconds(5f);
+        _fireMissiles = false;
+    }
+    
     IEnumerator NegativePowerActive()
     {
         _speed *= 0.25f;
@@ -344,6 +360,10 @@ public class Player : MonoBehaviour
             else if (_isWideShotActive)
             {
                 Instantiate(_wideLaserObjPrefab, transform.position, Quaternion.identity);
+            }
+            else if (_fireMissiles)
+            {
+                Instantiate(_homingProjectilePrefab, transform.position+new Vector3(0,_laserVerticalOffset,0), Quaternion.identity);
             }
             else
             {

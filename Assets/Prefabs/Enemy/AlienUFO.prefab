@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1599863184961647180}
   m_Layer: 0
   m_Name: AlienUFO
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,7 @@ MonoBehaviour:
   _explosionPrefab: {fileID: 913814553087369067, guid: cbe9d0acc77039645a263e7bfbdb13cd, type: 3}
   _enemyID: 2
   _shieldPrefab: {fileID: 4433918973866488004, guid: d20d3a60948609645b6fafc395bc5747, type: 3}
+  _reverseFiringRange: 5
 --- !u!82 &592573816133732617
 AudioSource:
   m_ObjectHideFlags: 0

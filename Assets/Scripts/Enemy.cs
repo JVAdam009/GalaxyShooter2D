@@ -302,21 +302,30 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                _hasShield = false;
-                foreach (Transform child in transform)
+                if (_enemyID == 1)
                 {
-                    Destroy(child.gameObject);
-                }
+                    _hasShield = false;
+                    foreach (Transform child in transform)
+                    {
+                        Destroy(child.gameObject);
+                    }
                 
-                StartCoroutine(ReEnableCollider(GetComponent<Collider2D>()));
-                Destroy(col.gameObject);
+                    StartCoroutine(ReEnableCollider(GetComponent<Collider2D>()));
+                    Destroy(col.gameObject);
+                }
+                else
+                {
+                    Destroy(gameObject);
+                    Destroy(col.gameObject);
+                }
+               
             }
         }
     }
 
     IEnumerator ReEnableCollider(Collider2D col)
     {
-        yield return new WaitForSeconds(1.1f);
+        yield return new WaitForSeconds(0.2f);
         col.enabled = true;
     }
 

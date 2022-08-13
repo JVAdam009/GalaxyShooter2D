@@ -72,6 +72,11 @@ public class AggressiveEnemy : MonoBehaviour
             _attackPlayer = false;
         }
 
+        if (player == null)
+        {
+            return;
+        }
+
 
         if (_attackPlayer)
         {

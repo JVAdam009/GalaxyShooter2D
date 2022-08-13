@@ -9,7 +9,7 @@ public class PowerUp : MonoBehaviour
 {
     [SerializeField] private float speed = 3f;
 
-    //Powerup IDs : 0 = triple shot 1 = speed 2 = shields 3 = Ammo 4 = Wrench
+    //Powerup IDs : 0 = triple shot 1 = speed 2 = shields 3 = Ammo 4 = Wrench 5 = Super Shot 6 = Power Down 7 = Homing Missiles
     [SerializeField] private int ID = 0;
 
     [SerializeField] private AudioClip _powerUpSFX;
@@ -75,6 +75,11 @@ public class PowerUp : MonoBehaviour
                 case 6:
                 {
                     player?.ActivateNegativePowerUp();
+                }
+                    break;
+                case 7:
+                {
+                    player?.ActivateMissilePowerUp();
                 }
                     break;
             }
