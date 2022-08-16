@@ -289,6 +289,8 @@ public class Enemy : MonoBehaviour
 
             if (!_hasShield)
             {
+                
+                GetComponent<Collider2D>().enabled = false;
                 _animator?.SetTrigger("onEnemyDeath");
                 _speed = 0; 
                 _sfxSource.clip = _explosionAudioClip;
@@ -304,6 +306,7 @@ public class Enemy : MonoBehaviour
             {
                 if (_enemyID == 1)
                 {
+                    
                     _hasShield = false;
                     foreach (Transform child in transform)
                     {
@@ -315,6 +318,7 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
+                    
                     Destroy(gameObject);
                     Destroy(col.gameObject);
                 }

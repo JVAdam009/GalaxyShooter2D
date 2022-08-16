@@ -631,7 +631,7 @@ MonoBehaviour:
   - {fileID: 1452926947521510005, guid: 24e4f8ac826509a48bb731b9bcbf0ab2, type: 3}
   spawnRate: 5
   enemyContainer: {fileID: 1917118569}
-  _waveNumber: 9
+  _waveNumber: 0
   _numEnemiesToStartWith: 3
   _additionalEnemiesToAdd: 1
   _PowerupContainer: {fileID: 2129853512}

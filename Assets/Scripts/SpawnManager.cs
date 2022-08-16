@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.VisualScripting;
-using UnityEngine;
+using UnityEngine; 
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
@@ -31,8 +32,6 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _PowerupContainer;
     
     [SerializeField] private Transform _BossSpawn;
-    
-    
     
     [SerializeField] private Transform _BossTargetSpot;
 
@@ -110,6 +109,9 @@ public class SpawnManager : MonoBehaviour
     
     public void EnemyDied()
     {
+       // var _totalEnemies = _numEnemiesToStartWith + (_waveNumber * _additionalEnemiesToAdd);
+       // Debug.Log("Total enemies to destroy: " + +_totalEnemies);
+       // Debug.Log("\nEnemies Destroyed: " + (_numEnemiesDestroyed + 1));
         _numEnemiesDestroyed++;
         if (_numEnemiesDestroyed == (_numEnemiesToStartWith+(_waveNumber*_additionalEnemiesToAdd)))
         {
@@ -126,7 +128,7 @@ public class SpawnManager : MonoBehaviour
         
         yield return new WaitForSeconds(3.2f);
         _spawnRoutineRunning = true;
-        while (!_stopSpawning && (_numEnemiesSpawned) < (_numEnemiesToStartWith+(_waveNumber*_additionalEnemiesToAdd)))
+        while (!_stopSpawning && (_numEnemiesSpawned) <= (_numEnemiesToStartWith+(_waveNumber*_additionalEnemiesToAdd)))
         {
             int randomEnemy = GenerateEnemy(Random.Range(0, 60));
             Instantiate(enemyObj[randomEnemy], new Vector3(Random.Range(-7, 7), 7.4f, 0f), Quaternion.identity,enemyContainer.transform);
